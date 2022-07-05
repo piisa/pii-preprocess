@@ -1,0 +1,88 @@
+[
+  {
+    "id": "1",
+    "data": "PII management specification\n",
+    "chunks": [
+      {
+        "id": "2",
+        "data": "Some rough initial ideas\n"
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "data": "Overall architecture\n",
+    "chunks": [
+      {
+        "id": "4",
+        "data": "The general structure of a framework dealing with PII management could be visualized as the following diagram:\n"
+      },
+      {
+        "id": "5",
+        "data": "There are up to four processing blocks for such a framework:\n"
+      },
+      {
+        "id": "6",
+        "data": "1. Preprocessing: block whose mission is to read a document in an arbitrary format (a Word Document, a Web page, a PDF file, etc) and produce a normalized version, retaining only a simplified version of the high-level structure and all the text data.\n"
+      },
+      {
+        "id": "7",
+        "data": "2. Detection: block in charge of processing input data (usually in text format) and performing detection of candidates to be assigned as PII data. This block uses as input:\n",
+        "chunks": [
+          {
+            "id": "8",
+            "data": "◦ source document. we will consider a normalized data format that conveys the raw text contents, together with some structural information (which can provide useful hints to the PII Detection modules about the relations between text chunks)\n"
+          },
+          {
+            "id": "9",
+            "data": "◦ configuration information: specification of contextual elements affecting detection (e.g. text language, applicable countries, etc)\n"
+          },
+          {
+            "id": "10",
+            "data": "◦ component information: the set of available PII Detectors that can be used (assuming we take a modular approach, there might be a database of “pluggable modules” we can use for PII detection). Each Detector will define the type and parameters of PII that can detect.\n"
+          }
+        ]
+      },
+      {
+        "id": "11",
+        "data": "3. Decision: block that takes a number of PII candidates, as produced by the Detection block, and consolidates that information, producing as final result the set of PII elements in the text that need to be addressed. In the process it might combine PII candidates, choose among overlapping PII candidates, reject others, etc. This block uses as input:\n",
+        "chunks": [
+          {
+            "id": "12",
+            "data": "◦ Candidate list: A list of detected PII candidates\n"
+          },
+          {
+            "id": "13",
+            "data": "◦ Configuration information, as provided by the Decision block (language, countries, etc)\n"
+          },
+          {
+            "id": "14",
+            "data": "◦ An optional purpose/application scenario, to guide the decisions\n"
+          },
+          {
+            "id": "15",
+            "data": "◦ Context information, as defined in its own configuration. This might include: requirements on PII specificity, sensitivity and scarcity, applicable regulations, etc\n"
+          }
+        ]
+      },
+      {
+        "id": "16",
+        "data": "4. Transformation. This is the block that takes the decided PII entities, and acts upon them, depending on the intended purpose.\n"
+      },
+      {
+        "id": "17",
+        "data": "There can be different Transformation blocks, all of them sharing the same interface but providing different outcomes. Some examples are:\n",
+        "chunks": [
+          {
+            "id": "18",
+            "data": "• Anonymization: modify the text to eliminate decided PII entities. Depending on options they can be replaced by placeholders, dummy values, generated fake PII data, etc\n"
+          },
+          {
+            "id": "19",
+            "data": "• Analytics:  provide the capability to extract and visualize aggregated statistics on decided PII and their associated parameters\n"
+          }
+        ]
+      }
+    ]
+  }
+]

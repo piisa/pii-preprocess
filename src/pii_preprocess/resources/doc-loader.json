@@ -1,0 +1,40 @@
+{
+  "types": [
+    {
+      "mime": "text/csv",
+      "ext": ".csv"
+    },
+    {
+      "mime": "application/x-src-document",
+      "ext":  [".yaml", ".yml"]
+    },
+    {
+      "mime": "application/msword",
+      "ext": ".docx"
+    },
+    {
+      "mime": "text/plain",
+      "ext": ".txt"
+    }    
+  ],
+  "loaders": {
+    "application/x-src-document": {
+      "class": "pii_data.types.localdoc.LocalSrcDocumentFile"
+    },
+    "text/plain": {
+      "class": "pii_preprocess.doc.text.TextSrcDocument",
+      "class_kwargs": {
+	"chunk_options": {
+	  "mode": "paragraph",
+	  "max_words": 250
+	}
+      }
+    },
+    "text/csv": {
+      "class": "pii_preprocess.doc.LocalCsvDocument"
+    },
+    "application/msword": {
+      "class": "pii_preprocess.doc.msoffice.MsWordDocument"
+    } 
+  }
+}

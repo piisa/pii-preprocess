@@ -1,0 +1,13 @@
+{
+  "types": [
+    {
+      "mime": "text/blurb",
+      "ext": ".blurb"
+    }
+  ],
+  "loaders": {
+    "text/blurb": {
+      "class": "pii_preprocess.doc.TextBlurb"
+    } 
+  }
+}

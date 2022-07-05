@@ -1,0 +1,94 @@
+format: piisa:src-document:v1
+header:
+  document:
+    title: The PII data specification example
+    author: PII group
+    category: test documents
+    id: 00000-11111
+    origin: msword
+    type: tree
+    date: "2022-08-13T16:41:00"
+chunks:
+- id: P1
+  data: |+
+    A document title
+
+- id: P2
+  data: |
+    Small paragraph before the first heading.
+- id: P3
+  data: |
+    1. The first chapter
+  chunks:
+  - id: P4
+    data: |
+      Some text.
+  - id: P5
+    data: |
+      More text.
+- id: P6
+  data: |
+    2. The second chapter
+  chunks:
+  - id: P7
+    data: |
+      2.1 First section
+    chunks:
+    - id: P8
+      data: |+
+        Something.
+
+    - id: P9
+      data: |
+        2.1.1 First subsection
+      chunks:
+      - id: P10
+        data: |+
+          Another thing.
+
+      - id: P11
+        data: |+
+          2.1.1.1 A subsubsection
+
+  - id: P12
+    data: |
+      2.2 Second section
+    chunks:
+    - id: P13
+      data: |
+        Yet another.
+    - chunks:
+      - id: P14
+        data: |
+          2.2.0.1 A wrong subsubsection
+- id: P15
+  data: |
+    3. The third chapter
+  chunks:
+  - id: P16
+    data: |
+      Something at the top of the third chapter.
+  - id: P17
+    data: |
+      3.1 First section of chapter 3
+    chunks:
+    - id: P18
+      data: |+
+        Nothing to see here.
+
+
+    - id: P19
+      data: |
+        3.2 First subsection of chapter 3.
+- id: P20
+  data: |
+    4. The fourth chapter
+  chunks:
+  - id: P21
+    data: |
+      This is all.
+  - id: P22
+    data: |+
+      I think.
+
+...
