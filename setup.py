@@ -74,8 +74,8 @@ setup_args = dict(
             "pii-doc = pii_preprocess.app.doc:main"
         ]
     },
-    include_package_data=False,
-    package_data={},
+    include_package_data=True,
+    package_data={"": ["pii_preprocess/resources/*.json"]},
     # Post-install hooks
     cmdclass={},
     keywords=["PIISA, PII"],
