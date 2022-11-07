@@ -135,3 +135,19 @@ def test124_paragraphs_wminmax():
 
     assert len(got) == 61
     assert got[7].data == "Contents\n\n-   1 Description\n-   2 Ecology\n-   3 Uses\n-   4 References\n-   5 External links\n\n\nDescription\n\n"
+
+
+def test130_single(fix_uuid):
+    """
+    Single chunk
+    """
+    opt = {"mode": "single"}
+    obj = mod.TextSrcDocument(DATADIR / "en-morus-rubra.txt",
+                              chunk_options=opt)
+    assert str(obj) == "<SrcDocument 00000-11111>"
+
+    got = list(obj)
+    assert len(got) == 1
+    with open(DATADIR / "en-morus-rubra.txt", encoding="utf-8") as f:
+        exp = f.read()
+    assert exp == got[0].data

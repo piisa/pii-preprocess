@@ -7,7 +7,7 @@ from typing import Dict
 from pii_data.helper.exception import InvArgException
 from pii_data.types.localdoc import BaseLocalSrcDocument
 
-from .read import LineReader, ParagraphReader, WordsReader, TreeReader
+from .read import SingleReader, LineReader, ParagraphReader, WordsReader, TreeReader
 
 
 # -----------------------------------------------------------------------
@@ -24,14 +24,17 @@ def load_text(inputfile: str, chunk_options: Dict,
 
     The basic chunk option is "mode", which defines how the text file will be
     decomposed in chunks:
+      * "single": the whole document in a single chunk
       * "line": each line is one chunk
       * "tree": indentation is used to define a document hierarchy
-      * "paragraph": document is split into paragraphs (unimplemented)
-      * "words": document is split into chunks of whole words (unimplemented)
+      * "paragraph": document is split into paragraphs
+      * "words": document is split into chunks of whole words
     """
     # Instantiate the right object
     mode = chunk_options.get('mode', 'line')
-    if mode == "line":
+    if mode == "single":
+        reader = SingleReader(**kwargs)
+    elif mode == "line":
         reader = LineReader(**kwargs)
     elif mode == 'tree':
         indent = chunk_options.get("indent")

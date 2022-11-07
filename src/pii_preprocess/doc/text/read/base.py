@@ -9,7 +9,7 @@ from typing import Dict, TextIO
 from pii_data.helper.io import openfile
 from pii_data.types.document import TYPE_META
 
-from ..utils import add_default_meta
+from ...utils import add_default_meta
 
 
 class BaseReader:
@@ -29,7 +29,7 @@ class BaseReader:
         Prepare & open a local text file
         """
         mtime = os.stat(inputfile).st_mtime
-        add_default_meta(self.meta, date=mtime)
+        add_default_meta(self.meta, origin="text", date=mtime)
         return openfile(inputfile, encoding=encoding)
 
 

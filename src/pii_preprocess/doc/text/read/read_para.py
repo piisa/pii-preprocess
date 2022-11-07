@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 """
-Read a text document and split it by paragraphs, using punctuation, also with 
+Read a text document and split it by paragraphs, using punctuation, also with
 options to limit paragraph sizes.
 """
 import re
@@ -9,9 +9,8 @@ from typing import Dict, Iterator
 
 from pii_data.types.localdoc import SequenceLocalSrcDocument
 
-from ..utils import chunker
+from ...utils import chunker
 from .base import BaseReader
-from .read_words import WordSplitter
 
 
 # End of sentence punctuation for Latin, Devanagari, Chinese & Arabic scripts
@@ -33,6 +32,14 @@ class ParagraphSplitter:
     """
 
     def __init__(self, doc: str, chunk_options: Dict):
+        """
+          :param doc: document to split, as a single string
+          :param chunk_options: chunking options
+             - min_words: minimum number of words in a paragraph, if less join
+               with the next paragraph, if 0 (default) there is no minimum
+             - max_words: maximum number of words in a paragraph, if greater
+               split paragraph, if 0 (default) there is no maximum
+        """
         self.doc = doc
         # Main regular expression
         eos = chunk_options.get("eos", False)
@@ -61,7 +68,7 @@ class ParagraphSplitter:
         prev_nw = 0
         for para in chunker(self.reg.split(self.doc), 2):
 
-            # Split paragraph into words, and count them
+            # Split paragraph into words (chunks of word+ws), and count them
             words = list(chunker(self.ws.split(para), 2, 2))
             para_nw = len(words)
 

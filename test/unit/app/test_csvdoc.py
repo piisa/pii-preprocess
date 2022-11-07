@@ -28,10 +28,23 @@ def fix_uuid(monkeypatch):
     monkeypatch.setattr(docmod, 'uuid', mock_uuid)
 
 
+@pytest.fixture
+def fix_tstamp(monkeypatch):
+    """
+    Monkey-patch the file modification time call
+    """
+    import pii_preprocess.doc.csv as modbase
+    mock_st = Mock()
+    mock_st.st_mtime = 20
+    mock_os = Mock()
+    mock_os.stat = Mock(return_value=mock_st)
+    monkeypatch.setattr(modbase, "os", mock_os)
+
+
 # -----------------------------------------------------------------------
 
 
-def test10_read(fix_uuid):
+def test10_read(fix_uuid, fix_tstamp):
     """Test reading a raw csv file"""
 
     with tempfile.NamedTemporaryFile(suffix=".yml") as f:

@@ -21,14 +21,14 @@ def chunker(it: Iterable[str], size: int, smin: int = 0) -> Iterable[str]:
             yield "".join(chunk)
 
 
-def add_default_meta(metadata: Dict, origin: str = "text", date: str = None):
+def add_default_meta(metadata: Dict, origin: str = None, date: str = None):
     """
-    Add some information to the metadata dict
+    Add some default information to the metadata dict, if not already there
     """
     if "document" not in metadata:
         metadata["document"] = {}
     doc = metadata["document"]
-    if "origin" not in doc:
+    if origin and "origin" not in doc:
         doc["origin"] = origin
     if date and "date" not in doc:
         if not isinstance(date, str):

@@ -7,11 +7,13 @@ from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.io import load_yaml
+from pii_data.types.chunker import DocumentChunk
 import pii_data.types.document as docmod
 
 import pii_preprocess.doc.csv as mod
 
 
+NAMES = ["Date", "Name", "Credit Card", "Currency", "Amount", "Description"]
 DATA = [
     ["2021-03-01", "John Smith", "4273 9666 4581 5642", "USD", "12.39", "Our Iceberg Is Melting: Changing and Succeeding Under Any Conditions"],
     ["2022-09-10", "Erik Jonsk", "4273 9666 4581 5642", "EUR", "11.99", "Bedtime Originals Choo Choo Express Plush Elephant - Humphrey"],
@@ -59,6 +61,7 @@ CHUNKS = [
 ]
 
 
+DATADIR = Path(__file__).parents[2] / "data" / "csv"
 
 def fname(name: str) -> str:
     return Path(__file__).parents[2] / "data" / "csv" / name
@@ -66,6 +69,7 @@ def fname(name: str) -> str:
 def readfile(name: str) -> str:
     with open(name, "rt", encoding="utf-8") as f:
         return f.read().strip()
+
 
 @pytest.fixture
 def fix_uuid(monkeypatch):
@@ -77,8 +81,37 @@ def fix_uuid(monkeypatch):
     monkeypatch.setattr(docmod, "uuid", mock_uuid)
 
 
+@pytest.fixture
+def fix_tstamp(monkeypatch):
+    """
+    Monkey-patch the file modification time call
+    """
+    mock_st = Mock()
+    mock_st.st_mtime = 20
+    mock_os = Mock()
+    mock_os.stat = Mock(return_value=mock_st)
+    monkeypatch.setattr(mod, "os", mock_os)
+
+
 # ----------------------------------------------------------------
 
+class myTestClass1(mod.CsvDocument):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.add_metadata(column={'name': NAMES})
+
+    def get_base_iter(self):
+        return iter(DATA)
+
+
+class myTestClass2(mod.TextIOCsvDocument):
+
+    def open(self):
+        return open(DATADIR / "table-example.csv", encoding="utf-8")
+
+
+# ----------------------------------------------------------------
 
 def test100_constructor(fix_uuid):
     """Test base object creation"""
@@ -88,33 +121,22 @@ def test100_constructor(fix_uuid):
 
 def test110_open():
     """Test open file"""
-    obj = mod.CsvDocument()
-    filename = fname("table-example.csv")
-    with open(filename, encoding="utf-8") as f:
-        obj.open(f)
-        assert str(obj) == "<CsvDocument>"
+    obj = myTestClass1()
+    assert str(obj) == "<CsvDocument>"
 
 
 def test120_read_base():
     """Test data read"""
-    obj = mod.CsvDocument()
-    filename = fname("table-example.csv")
-    with open(filename, encoding="utf-8") as f:
-        obj.open(f)
-        got = list(obj.iter_base())
-
+    obj = myTestClass1()
+    got = list(obj.iter_base())
     exp = [{"id": f"R{n}", "data": e} for n, e in enumerate(DATA, start=1)]
     assert exp == got
 
 
 def test125_read_base_block():
     """Test data read, group rows"""
-    obj = mod.CsvDocument()
-    filename = fname("table-example.csv")
-    with open(filename, encoding="utf-8") as f:
-        obj.open(f)
-        got = list(obj.iter_base_block(block_size=2))
-
+    obj = myTestClass1()
+    got = list(obj.iter_base_block(block_size=2))
     exp = [
         {"id": "B1", "data": DATA[0:2]},
         {"id": "B2", "data": DATA[2:]}
@@ -124,30 +146,114 @@ def test125_read_base_block():
 
 def test130_read_chunks():
     """Test data read, in chunks"""
-    obj = mod.CsvDocument()
-    filename = fname("table-example.csv")
-    with open(filename, encoding="utf-8") as f:
-        obj.open(f)
-        got = list(obj)
-
-    exp = [docmod.DocumentChunk(**c) for c in CHUNKS]
+    obj = myTestClass1()
+    got = list(obj)
+    exp = [DocumentChunk(**c) for c in CHUNKS]
     assert len(exp) == len(got)
     for e, g in zip(exp, got):
         assert e == g
 
 
-def test200_local():
-    """Test local object creation, data"""
-    filename = fname("table-example.csv")
+def test220_read_base():
+    """Test data read"""
+    obj = myTestClass2()
+    got = list(obj.iter_base())
+    exp = [{"id": f"R{n}", "data": e} for n, e in enumerate(DATA, start=1)]
+    assert exp == got
+
+
+def test225_read_base_block():
+    """Test data read, group rows"""
+    obj = myTestClass2()
+    got = list(obj.iter_base_block(block_size=2))
+    exp = [
+        {"id": "B1", "data": DATA[0:2]},
+        {"id": "B2", "data": DATA[2:]}
+    ]
+    assert exp == got
+
+
+def test230_read_chunks():
+    """Test data read, in chunks"""
+    obj = myTestClass2()
+    got = list(obj)
+    exp = [DocumentChunk(**c) for c in CHUNKS]
+    assert len(exp) == len(got)
+    for e, g in zip(exp, got):
+        assert e == g
+
+
+def test300_local():
+    """Test local object creation"""
+    filename = DATADIR / "table-example.csv"
     obj = mod.LocalCsvDocument(filename)
     assert str(obj) == f"<CsvDocument file={filename}>"
 
 
-def test210_read_base():
+def test301_local_meta(fix_tstamp):
+    """Test local object, metadata"""
+    filename = DATADIR / "table-example.csv"
+    obj = mod.LocalCsvDocument(filename)
+    exp = {
+        'document': {
+            'id': str(filename),
+            'type': 'table',
+            'origin': 'csv',
+            'date': '1970-01-01T00:00:20'
+        },
+        'column': {
+            'name': ['Date', 'Name', 'Credit Card', 'Currency',
+                     'Amount', 'Description']
+        }
+    }
+    assert exp == dict(**obj.metadata)
+
+
+def test302_local_meta_path(fix_tstamp, fix_uuid):
+    """Test local object, metadata, no path id"""
+    filename = DATADIR / "table-example.csv"
+    obj = mod.LocalCsvDocument(filename, id_path_prefix=False)
+    exp = {
+        'document': {
+            'id': '00000-11111',
+            'type': 'table',
+            'origin': 'csv',
+            'date': '1970-01-01T00:00:20'
+        },
+        'column': {
+            'name': ['Date', 'Name', 'Credit Card', 'Currency',
+                     'Amount', 'Description']
+        }
+    }
+    assert exp == dict(**obj.metadata)
+
+
+def test303_local_meta_id(fix_tstamp, fix_uuid):
+    """Test local object, metadata, doc id"""
+    filename = DATADIR / "table-example.csv"
+    obj = mod.LocalCsvDocument(filename, id_path_prefix=False,
+                               metadata={"document": {"id": "abc"}})
+    exp = {
+        'document': {
+            'id': 'abc',
+            'type': 'table',
+            'origin': 'csv',
+            'date': '1970-01-01T00:00:20'
+        },
+        'column': {
+            'name': ['Date', 'Name', 'Credit Card', 'Currency',
+                     'Amount', 'Description']
+        }
+    }
+    assert exp == dict(**obj.metadata)
+
+
+
+def test310_read_base():
     """Test document base iteration"""
     filename = fname("table-example.csv")
     obj = mod.LocalCsvDocument(filename)
-    obj.open(filename)
+    obj.open()
     got = list(obj.iter_base())
     obj.close()
 
@@ -155,7 +261,7 @@ def test210_read_base():
     assert exp == got
 
 
-def test220_ctx_manager():
+def test320_ctx_manager():
     """Test reading local document, using context manager"""
     with mod.LocalCsvDocument(fname("table-example.csv")) as f:
         got = list(f.iter_base())
@@ -164,27 +270,42 @@ def test220_ctx_manager():
     assert exp == got
 
 
-def test300_read_chunks():
+def test400_read_chunks():
     """Test document chunks"""
     filename = fname("table-example.csv")
     obj = mod.LocalCsvDocument(filename)
-    obj.open(filename)
+    obj.open()
     got = list(obj)
     obj.close()
-    exp = [docmod.DocumentChunk(**c) for c in CHUNKS]
+    exp = [DocumentChunk(**c) for c in CHUNKS]
     assert exp == got
 
 
-def test310_chunks_ctx_manager():
+def test401_read_chunks_repeat():
+    """Test document chunks, repeatedly"""
+    filename = fname("table-example.csv")
+    obj = mod.LocalCsvDocument(filename)
+    obj.open()
+
+    got = list(obj)
+    exp = [DocumentChunk(**c) for c in CHUNKS]
+    assert exp == got
+
+    got = list(obj)
+    exp = [DocumentChunk(**c) for c in CHUNKS]
+    assert exp == got
+
+
+def test410_chunks_ctx_manager():
     """Test reading local document, using context manager"""
     with mod.LocalCsvDocument(fname("table-example.csv")) as f:
         got = list(f)
 
-    exp = [docmod.DocumentChunk(**c) for c in CHUNKS]
+    exp = [DocumentChunk(**c) for c in CHUNKS]
     assert exp == got
 
 
-def test320_read_chunks_context(fix_uuid):
+def test420_read_chunks_context(fix_uuid, fix_tstamp):
     """Test document chunks, context"""
     name = fname("table-example.csv")
     obj = mod.LocalCsvDocument(name, id_path_prefix=False,
@@ -193,10 +314,11 @@ def test320_read_chunks_context(fix_uuid):
     obj.close()
 
     ctx_doc = MappingProxyType({"type": "table", "origin": "csv",
-                                "id": "00000-11111"})
+                                "id": "00000-11111",
+                                "date": "1970-01-01T00:00:20"})
 
     # Check the first chunk
-    assert got[0] == docmod.DocumentChunk(
+    assert got[0] == DocumentChunk(
         id=CHUNKS[0]['id'],
         data=CHUNKS[0]['data'],
         context={"document": ctx_doc,
@@ -207,7 +329,7 @@ def test320_read_chunks_context(fix_uuid):
 
     # Check all chunks
     exp = [
-        docmod.DocumentChunk(
+        DocumentChunk(
             id=e['id'],
             data=e['data'],
             context={"document": ctx_doc,
@@ -221,10 +343,11 @@ def test320_read_chunks_context(fix_uuid):
     del exp[0].context['before']
     del exp[-1].context['after']
 
+    assert len(exp) == len(got)
     assert exp == got
 
 
-def test320_read_chunks_context_meta():
+def test420_read_chunks_context_meta(fix_tstamp):
     """Test object creation, multiple chunks, context, metadata"""
     obj = mod.LocalCsvDocument(fname("table-example.csv"),
                                iter_options={'context': True})
@@ -234,10 +357,10 @@ def test320_read_chunks_context_meta():
     obj.close()
 
     ctx_doc = MappingProxyType({"id": "abc", "lang": "en", "type": "table",
-                                "origin": "csv"})
+                                "origin": "csv", "date": "1970-01-01T00:00:20"})
     ctx_ds = MappingProxyType({"name": "BigDataset"})
     exp = [
-        docmod.DocumentChunk(
+        DocumentChunk(
             id=e['id'],
             data=e['data'],
             context={"document": ctx_doc,
@@ -252,10 +375,11 @@ def test320_read_chunks_context_meta():
     del exp[0].context['before']
     del exp[-1].context['after']
 
+    assert len(exp) == len(got)
     assert exp == got
 
 
-def test400_dump(fix_uuid):
+def test500_dump(fix_uuid, fix_tstamp):
     """Test object dump"""
 
     filename = fname("table-example.csv")

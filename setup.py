@@ -69,8 +69,8 @@ setup_args = dict(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "pii-prep-csv = pii_preprocess.app.csvdoc:main"
-            "pii-prep-text = pii_preprocess.app.textdoc:main"
+            "pii-prep-csv = pii_preprocess.app.csvdoc:main",
+            "pii-prep-text = pii_preprocess.app.textdoc:main",
             "pii-doc = pii_preprocess.app.doc:main"
         ]
     },

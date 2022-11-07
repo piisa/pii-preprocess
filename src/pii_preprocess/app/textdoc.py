@@ -7,9 +7,8 @@ from argparse import ArgumentParser, Namespace
 
 from pii_data.helper.io import base_extension
 from pii_data.types.localdoc import LocalSrcDocumentFile
-from pii_data.doc import dump_text
 
-from ..doc.text import TextSrcDocument
+from ..doc.text import TextSrcDocument, CHUNK_MODES
 
 
 def from_plain(inputfile: str, args: Namespace) -> TextSrcDocument:
@@ -17,8 +16,8 @@ def from_plain(inputfile: str, args: Namespace) -> TextSrcDocument:
     Read a plain text file
     """
     opt = {"mode": args.mode}
-    if args.indent:
-        opt["indent"] = args.indent
+    if args.input_indent:
+        opt["indent"] = args.input_indent
     if args.chunk_options:
         opt.update(v.split("=", 1) for v in args.chunk_options)
     return TextSrcDocument(inputfile, chunk_options=opt)
@@ -28,15 +27,18 @@ def from_plain(inputfile: str, args: Namespace) -> TextSrcDocument:
 
 def parse_args():
     args = ArgumentParser(description='Convert from YAML PII Source Doc to plain raw text or viceversa')
-    args.add_argument('inputdoc')
-    args.add_argument('outputdoc')
-    args.add_argument('--indent', type=int, default=0, metavar="NUMCHARS",
-                      help="indent value to detect/generate tree hierarchy")
-    args.add_argument('--mode', choices=("line", "tree", "paragraph", "word"),
-                      default="line",
+    args.add_argument('inputdoc', help='input file (text or YAML)')
+    args.add_argument('outputdoc',
+                      help='output file (format to be deduced from file extension)')
+    args.add_argument('--mode', choices=CHUNK_MODES, default="line",
                       help="text chunking mode (default: %(default)s)")
     args.add_argument('--chunk-options', metavar="NAME=VAL", nargs="+",
                       help="text chunking options")
+    args.add_argument('--input-indent', type=int, default=0, metavar="NUMCHARS",
+                      help="indent value to detect tree hierarchy in text input")
+    args.add_argument('--output-indent', type=int, default=None,
+                      metavar="NUMCHARS",
+                      help="output indent value (for text or json output)")
     return args.parse_args()
 
 
@@ -53,11 +55,7 @@ def main(args: Namespace = None):
         doc = from_plain(args.inputdoc, args)
 
     # Write it
-    ext2 = base_extension(args.outputdoc)
-    if ext2 in ('.yml', '.yaml'):
-        doc.dump(args.outputdoc)
-    else:
-        dump_text(doc, args.outputdoc, args.indent)
+    doc.dump(args.outputdoc, indent=args.output_indent)
 
 
 if __name__ == '__main__':

@@ -5,7 +5,6 @@ as YAML or text.
 
 from argparse import ArgumentParser, Namespace
 
-from pii_data.doc import dump_text
 from pii_data.helper.io import base_extension
 
 from ..loader import DocumentLoader
