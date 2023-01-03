@@ -7,7 +7,7 @@ import os
 from typing import Dict, TextIO
 
 from pii_data.helper.io import openfile
-from pii_data.types.document import TYPE_META
+from pii_data.types.doc.document import TYPE_META
 
 from ...utils import add_default_meta
 

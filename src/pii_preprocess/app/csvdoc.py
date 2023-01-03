@@ -8,7 +8,7 @@ from argparse import ArgumentParser, Namespace
 
 
 from pii_data.helper.exception import InvArgException
-from pii_data.types.localdoc import load_file, TableLocalSrcDocument
+from pii_data.types.doc.localdoc import load_file, TableLocalSrcDocument
 from pii_preprocess.doc.csv import LocalCsvDocument
 
 

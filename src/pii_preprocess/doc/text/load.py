@@ -5,7 +5,7 @@ Read raw text documents
 from typing import Dict
 
 from pii_data.helper.exception import InvArgException
-from pii_data.types.localdoc import BaseLocalSrcDocument
+from pii_data.types.doc.localdoc import BaseLocalSrcDocument
 
 from .read import SingleReader, LineReader, ParagraphReader, WordsReader, TreeReader
 

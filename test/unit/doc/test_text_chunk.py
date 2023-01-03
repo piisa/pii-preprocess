@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import Mock
 import pytest
 
-import pii_data.types.document as docmod
+import pii_data.types.doc.document as docmod
 
 import pii_preprocess.doc.text.load as mod
 

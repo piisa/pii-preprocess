@@ -8,7 +8,7 @@ from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.io import load_yaml
-import pii_data.types.document as docmod
+import pii_data.types.doc.document as docmod
 
 import pii_preprocess.doc.msoffice.msword as mod
 

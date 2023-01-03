@@ -3,48 +3,38 @@ Define a loader class that can load a local fila in a numberformats as
 an SrcDocument, by dispatching to an appropriate loader
 """
 
-from importlib.resources import open_text
 from collections import defaultdict
 from pathlib import Path
-import json
 
 from typing import Dict, TextIO, List
 
 from pii_data.helper.exception import ProcException, InvalidDocument
 from pii_data.helper.io import base_extension
 from pii_data.helper.misc import import_object
-from pii_data.types import SrcDocument
+from pii_data.helper.config import load_single_config, TYPE_CONFIG_LIST
+from pii_data.types.doc import SrcDocument
+
+from .. import defs
 
 
 DEFAULT_CONFIG = "doc-loader.json"
 
 
-def open_resource(name: str) -> TextIO:
-    """
-    Open a text resource file
-    """
-    return open_text("pii_preprocess.resources", name)
-
 
 class DocumentLoader:
 
-    def __init__(self, configfile: List[str] = None):
+    def __init__(self, config: TYPE_CONFIG_LIST = None):
         """
-         :param configfile| list of configuration files to add on top of the
+         :param configfile: list of configuration files to add on top of the
            default config
         """
         self.types = defaultdict(list)
         self.loaders = {}
 
-        # Load default configuration
-        self.add_config(json.load(open_resource(DEFAULT_CONFIG)))
-
-        # Add additional config files
-        if configfile:
-            if isinstance(configfile, (str, Path)):
-                configfile = [configfile]
-            for f in configfile:
-                self.read_config(f)
+        # Load configuration
+        base = Path(__file__).parents[1] / "resources" / DEFAULT_CONFIG
+        config = load_single_config(base, defs.FMT_CONFIG_LOADER, config)
+        self.add_config(config)
 
 
     def __repr__(self) -> str:
@@ -55,7 +45,10 @@ class DocumentLoader:
         """
         Add a configuration dictionary to the object
         """
+        # Add loaders
         self.loaders.update(config.get("loaders", {}))
+
+        # Add document types
         for elem in config.get("types", {}):
             # Check fields
             for f in ("ext", "mime"):
@@ -67,17 +60,6 @@ class DocumentLoader:
                 extlist = [extlist]
             for e in extlist:
                 self.types[e].append(elem)
-
-
-    def read_config(self, configname: str):
-        """
-        Read a configuration file and add it to the object
-        """
-        with open(configname, encoding="utf-8") as f:
-            try:
-                self.add_config(json.load(f))
-            except json.JSONDecodeError as e:
-                raise ProcException("Invalid config file {}: {}", configname, e)
 
 
     def load(self, docname: str, metadata: Dict = None) -> SrcDocument:

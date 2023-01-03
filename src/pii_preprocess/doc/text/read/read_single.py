@@ -2,7 +2,7 @@
 Read a text document as a single chunk
 """
 
-from pii_data.types.localdoc import SequenceLocalSrcDocument
+from pii_data.types.doc.localdoc import SequenceLocalSrcDocument
 
 from .base import BaseReader
 

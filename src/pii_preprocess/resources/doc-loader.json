@@ -1,4 +1,5 @@
 {
+  "format": "piisa:config:pii-preprocess:loader:v1",
   "types": [
     {
       "mime": "text/csv",
@@ -19,7 +20,7 @@
   ],
   "loaders": {
     "application/x-src-document": {
-      "class": "pii_data.types.localdoc.LocalSrcDocumentFile"
+      "class": "pii_data.types.doc.localdoc.LocalSrcDocumentFile"
     },
     "text/plain": {
       "class": "pii_preprocess.doc.text.TextSrcDocument",

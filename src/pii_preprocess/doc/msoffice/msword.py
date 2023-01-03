@@ -9,8 +9,8 @@ from docx.text.paragraph import Paragraph
 
 from typing import Dict, Iterable, Tuple
 
-from pii_data.types.document import TreeSrcDocument, SequenceSrcDocument, TYPE_META
-from pii_data.types.localdoc import dump_file
+from pii_data.types.doc.document import TreeSrcDocument, SequenceSrcDocument, TYPE_META
+from pii_data.types.doc.localdoc import dump_file
 
 
 def add_subchunk(parent: Dict, subchunk: Dict):

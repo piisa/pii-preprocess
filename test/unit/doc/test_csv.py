@@ -7,8 +7,8 @@ from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.io import load_yaml
-from pii_data.types.chunker import DocumentChunk
-import pii_data.types.document as docmod
+from pii_data.types.doc.chunker import DocumentChunk
+import pii_data.types.doc.document as docmod
 
 import pii_preprocess.doc.csv as mod
 

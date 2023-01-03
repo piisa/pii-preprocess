@@ -1,4 +1,5 @@
 {
+  "format": "piisa:config:pii-preprocess:loader:v1",
   "types": [
     {
       "mime": "text/blurb",

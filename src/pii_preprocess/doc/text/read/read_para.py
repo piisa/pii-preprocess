@@ -7,7 +7,7 @@ import re
 
 from typing import Dict, Iterator
 
-from pii_data.types.localdoc import SequenceLocalSrcDocument
+from pii_data.types.doc.localdoc import SequenceLocalSrcDocument
 
 from ...utils import chunker
 from .base import BaseReader

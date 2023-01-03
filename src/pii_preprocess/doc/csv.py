@@ -12,8 +12,8 @@ from typing import Dict, Iterable, List, TextIO, Iterator
 
 from pii_data.helper.exception import UnimplementedException
 from pii_data.helper.io import openfile
-from pii_data.types.document import TableSrcDocument, TYPE_META
-from pii_data.types.localdoc import TableLocalSrcDocument
+from pii_data.types.doc.document import TableSrcDocument, TYPE_META
+from pii_data.types.doc.localdoc import TableLocalSrcDocument
 
 from .utils import add_default_meta, as_bool
 

@@ -5,8 +5,8 @@ Read a text document and create a tree by using indent
 from typing import TextIO, Iterable
 
 from pii_data.helper.exception import InvalidDocument
-from pii_data.types.localdoc import (BaseLocalSrcDocument, TreeLocalSrcDocument,
-                                     SequenceLocalSrcDocument)
+from pii_data.types.doc.localdoc import \
+    BaseLocalSrcDocument, TreeLocalSrcDocument, SequenceLocalSrcDocument
 
 from ..defs import DEFAULT_INDENT
 from .base import BaseReader

@@ -1,21 +1,23 @@
 # Document loader
 
-The `DocumentLoader` os a configurable loader class thar can load document
-formats by dispatching to appropriate `SrcDocument` subclasses.
-It is governed by one or several configuration file(s).
+The `DocumentLoader` is a configurable loader class thar can load a number
+of different document formats by dispatching to appropriate `SrcDocument`
+subclasses. It is governed by one or several configuration file(s).
 
-The mechanics are:
+The mechanics of its usage are:
  * instantiate the class
- * optionally add configuration files (either in the constructor or by using
-   the `add_config()` or `read_config()` methods
- * call the `load(filename)` method to load a file
+ * optionally add additional configuration files (either in the constructor
+   itself or by using the `add_config()` method)
+ * call the `load(filename)` method to read and convert a file into a
+   [Source Document] object `SrcDcument`
  
  
 ## Configuration file
  
- A `DocumentLoader` configuration file is a dictionary containing two fields:
+ A `DocumentLoader` configuration file is a PIISA configuration file that
+ contains two fields:
   * `types`: a list of document types to handle. Each type is a dict with
-    fields `mime` (document MIME type) and `ext` (file extensions to match, it
+    fields `mime` (document MIME type) and `ext` (file extensions to match; it
     can be a single one or a list of extensions).
   * `loaders`: a dictionary mapping document mime types to document loaders.
     A loader is a dictionary with these fields:
@@ -42,7 +44,7 @@ Note that:
 
 Additional document types can be added to a `DocumentLoader` object by 
 defining an appropriate loader subclass and adding it in a configuration
-passed to `add_config()` or `read_config()`-
+passed to `add_config()`.
 
 The requirements for such a loader subclass are:
  * It must be a subclass of `SrcDocument` (or one of its subclasses)
@@ -61,3 +63,4 @@ converts them to the canonical YAML representation.
 
 
 [default configuration]: ../src/pii_preprocess/resources/doc-loader.json
+[Source Document]: htttps:/github.com/piisa/pii-data/tree/main/doc/srcdocument.md
