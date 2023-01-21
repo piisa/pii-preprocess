@@ -6,7 +6,7 @@ an SrcDocument, by dispatching to an appropriate loader
 from collections import defaultdict
 from pathlib import Path
 
-from typing import Dict, TextIO, List
+from typing import Dict
 
 from pii_data.helper.exception import ProcException, InvalidDocument
 from pii_data.helper.io import base_extension
