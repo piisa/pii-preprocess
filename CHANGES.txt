@@ -1,4 +1,8 @@
+v. 0.2.0
+ * manage document collections
+ * define pii-preprocess plugins
+ * requires pii-data 0.3.0
 
-v. 0.0.1
+v. 0.1.0
  * initial version
  
