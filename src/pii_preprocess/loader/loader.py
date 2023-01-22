@@ -1,89 +1,55 @@
 """
-Define a loader class that can load a local fila in a numberformats as 
+Define a loader class that can load a local file in a number of formats as
 an SrcDocument, by dispatching to an appropriate loader
 """
-
-from collections import defaultdict
 from pathlib import Path
 
-from typing import Dict
+from typing import Dict, Union, TextIO
 
 from pii_data.helper.exception import ProcException, InvalidDocument
-from pii_data.helper.io import base_extension
 from pii_data.helper.misc import import_object
-from pii_data.helper.config import load_single_config, TYPE_CONFIG_LIST
+from pii_data.helper.config import TYPE_CONFIG_LIST
 from pii_data.types.doc import SrcDocument
 
-from .. import defs
+from .utils import get_loader_config
+from .base import BaseLoader
 
 
-DEFAULT_CONFIG = "doc-loader.json"
+class BaseDocumentLoader(BaseLoader):
+    """
+    A base class instantiated with an already loaded config
+    """
 
-
-
-class DocumentLoader:
-
-    def __init__(self, config: TYPE_CONFIG_LIST = None):
+    def __init__(self, config: Dict, debug: bool = False):
         """
-         :param configfile: list of configuration files to add on top of the
-           default config
+          :param config: the loader configuration to use
+          :param debug: print debug information
         """
-        self.types = defaultdict(list)
-        self.loaders = {}
-
-        # Load configuration
-        base = Path(__file__).parents[1] / "resources" / DEFAULT_CONFIG
-        config = load_single_config(base, defs.FMT_CONFIG_LOADER, config)
+        super().__init__(debug=debug)
         self.add_config(config)
 
 
-    def __repr__(self) -> str:
-        return f"<DocumentLoader {len(self.loaders)}>"
-
-
-    def add_config(self, config: Dict):
-        """
-        Add a configuration dictionary to the object
-        """
-        # Add loaders
-        self.loaders.update(config.get("loaders", {}))
-
-        # Add document types
-        for elem in config.get("types", {}):
-            # Check fields
-            for f in ("ext", "mime"):
-                if f not in elem:
-                    raise ProcException("Invalid type config: no '{}' field", f)
-            # Add the element
-            extlist = elem["ext"]
-            if isinstance(extlist, str):
-                extlist = [extlist]
-            for e in extlist:
-                self.types[e].append(elem)
-
-
-    def load(self, docname: str, metadata: Dict = None) -> SrcDocument:
+    def load(self, src: Union[str, Path, TextIO], metadata: Dict = None,
+             srcname: str = None) -> SrcDocument:
         """
         Load a source document by finding the appropriate loader class and
         instantiating it
-          :param docname: filename containing the document to load
+          :param src: source to read the data from (it could be a filename
+             or a file-like object)
           :param metadata: optional document-level metadata to add
+          :param srcname: filename for the source (used when `src` is not
+             a name)
         """
-        ext = base_extension(docname)
-        if ext not in self.types:
-            raise ProcException("cannot find a type for file: {}", docname)
         err = []
+        if not srcname:
+            srcname = str(src)
 
         # Search all the mime types for this extension
-        for elem in self.types[ext]:
+        for loader in self.get_loaders(srcname):
 
-            # Find the loader for this mime type
-            mime = elem.get("mime")
-            if mime not in self.loaders:
-                raise ProcException("no loader available for type: {}", mime)
-            loader = self.loaders[mime]
-            if "class" not in loader:
-                raise ProcException("invalid loader config for type: {}: no class", mime)
+            if loader.get("type") == "collection":
+                raise ProcException("invalid loader for doc '{}': collection")
+
             # Import the loader class
             cls = import_object(loader["class"])
             kwargs = loader.get("class_kwargs", {})
@@ -93,9 +59,31 @@ class DocumentLoader:
 
             # Instantiate the class
             try:
-                return cls(docname, metadata=meta, **kwargs)
+                return cls(src, metadata=meta, **kwargs)
             except InvalidDocument as e:
                 err.add(str(e))
 
-        raise ProcException("cannot load document '{}': {}", docname,
+        raise ProcException("cannot load document '{}': {}", srcname,
                             ",".join(err))
+
+
+# -----------------------------------------------------------------------
+
+
+class DocumentLoader(BaseDocumentLoader):
+    """
+    The full document loader class
+    """
+
+    def __init__(self, config: TYPE_CONFIG_LIST = None, debug: bool = False):
+        """
+         :param configfile: list of configurations to add on top of the
+           default config
+        """
+        cfg = get_loader_config(config, debug=debug)
+        super().__init__(cfg, debug=debug)
+
+
+    def __repr__(self) -> str:
+        num = len(self.conf.loader)
+        return f"<DocumentLoader #{num}>"

@@ -5,12 +5,17 @@ from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.exception import ProcException
+from pii_data.defs import FMT_CONFIG_PREFIX
 import pii_data.types.doc.document as docmod
 
+from pii_preprocess.defs import FMT_CONFIG_LOADER
 import pii_preprocess.loader.loader as mod
 
 
+NUM_LOADERS = 6
+
 DATADIR = Path(__file__).parents[2] / "data"
+
 
 def readfile(name: str) -> str:
     with open(name, "rt", encoding="utf-8") as f:
@@ -32,13 +37,13 @@ def fix_uuid(monkeypatch):
 def test100_constructor(fix_uuid):
     """Test object creation"""
     obj = mod.DocumentLoader()
-    assert str(obj) == "<DocumentLoader 4>"
+    assert str(obj) == f"<DocumentLoader #{NUM_LOADERS}>"
 
 
 def test110_constructor(fix_uuid):
     """Test object creation, config file"""
-    obj = mod.DocumentLoader(DATADIR / "test-loader.json")
-    assert str(obj) == "<DocumentLoader 5>"
+    obj = mod.DocumentLoader(DATADIR / "config" / "test-loader.json")
+    assert str(obj) == f"<DocumentLoader #{NUM_LOADERS+1}>"
 
 
 def test120_load_invalid(fix_uuid):
@@ -47,17 +52,17 @@ def test120_load_invalid(fix_uuid):
     name = DATADIR / "example.blargh"
     with pytest.raises(ProcException) as e:
         obj.load(name)
-    assert str(e.value) == f"cannot find a type for file: {name}"
+    assert str(e.value) == f"cannot find a mime type for file: {name}"
 
 def test121_load_invalid(fix_uuid):
-    """Test error in document load"""
-    obj = mod.DocumentLoader()
-    fakeconf = {"loaders": { "text/plain": {"class": "a.non.existing.class"}}}
-    obj.add_config(fakeconf)
+    """Test invalid config for document load"""
+    fakeconf = {"format": FMT_CONFIG_PREFIX + FMT_CONFIG_LOADER,
+                "loaders": {"text/plain": {"class": "non.existing.class"}}}
+    obj = mod.DocumentLoader({FMT_CONFIG_LOADER: fakeconf})
     name = DATADIR / "example.txt"
     with pytest.raises(ProcException) as e:
         obj.load(name)
-    assert str(e.value) == "cannot import object 'a.non.existing.class': No module named 'a'"
+    assert str(e.value) == "cannot import object 'non.existing.class': No module named 'non'"
 
 
 def test200_load_yml():
