@@ -1,0 +1,68 @@
+[
+  {
+    "data": "A document title\n\n", "id": "P1"
+  },
+  {
+    "data": "Small paragraph before the first heading.\n", "id": "P2"
+  },
+  {
+    "data": "1. The first chapter\n", "id": "P3"
+  },
+  {
+    "data": "Some text.\n", "id": "P4"
+  },
+  {
+    "data": "More text.\n", "id": "P5"
+  },
+  {
+    "data": "2. The second chapter\n", "id": "P6"
+  },
+  {
+    "data": "2.1 First section\n", "id": "P7"
+  },
+  {
+    "data": "Something.\n\n", "id": "P8"
+  },
+  {
+    "data": "2.1.1 First subsection\n", "id": "P9"
+  },
+  {
+    "data": "Another thing.\n\n", "id": "P10"
+  },
+  {
+    "data": "2.1.1.1 A subsubsection\n\n", "id": "P11"
+  },
+  {
+    "data": "2.2 Second section\n", "id": "P12"
+  },
+  {
+    "data": "Yet another.\n", "id": "P13"
+  },
+  {
+    "data": "2.2.0.1 A wrong subsubsection\n", "id": "P14"
+  },
+  {
+    "data": "3. The third chapter\n", "id": "P15"
+  },
+  {
+    "data": "Something at the top of the third chapter.\n", "id": "P16"
+  },
+  {
+    "data": "3.1 First section of chapter 3\n", "id": "P17"
+  },
+  {
+    "data": "Nothing to see here.\n\n\n", "id": "P18"
+  },
+  {
+    "data": "3.2 First subsection of chapter 3.\n", "id": "P19"
+  },
+  {
+    "data": "4. The fourth chapter\n", "id": "P20"
+  },
+  {
+    "data": "This is all.\n", "id": "P21"
+  },
+  {
+    "data": "I think.\n\n", "id": "P22"
+  }
+]

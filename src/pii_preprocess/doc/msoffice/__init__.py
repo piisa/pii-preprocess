@@ -1,0 +1,1 @@
+from .msword import MsWordDocument
