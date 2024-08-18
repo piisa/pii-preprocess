@@ -32,12 +32,17 @@ def patch_entry_points(monkeypatch):
     Monkey-patch the importlib.metadata.entry_points call to return only our
     plugin entry point
     """
+    # a mock entry point
     mock_entry = Mock()
     mock_entry.name = "pii-preprocessor-plg [unit-test]"
     mock_entry.load = Mock(return_value=MockPlugin)
 
-    mock_ep = Mock(return_value={PII_PREPROCESS_PLUGIN_ID: [mock_entry]})
-    monkeypatch.setattr(modutils, 'entry_points', mock_ep)
+    # mock the entry_points() call to return our mock
+    mock_ep = Mock()
+    mock_ep.get = Mock(return_value=[mock_entry])       # Python < 3.10
+    mock_ep.select = Mock(return_value=[mock_entry])    # Python >= 3.10
+    mock_ep_function = Mock(return_value=mock_ep)
+    monkeypatch.setattr(modutils, 'entry_points', mock_ep_function)
 
 
 def patch_uuid(monkeypatch):

@@ -29,4 +29,4 @@ document).
 ## Document metadata
 
 Some document-level metadata, if present in the file, is added to the document
-header: title, author & category.
+header: _title_, _author_ & _category_.

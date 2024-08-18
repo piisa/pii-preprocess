@@ -48,7 +48,7 @@ paragraph sizes:
 In the special "tree" mode, the code tries to infer a hierarchical tree
 document by using leading indent: the "indent" parameter indicates how many
 additional indent characters are used to detect each level in the tree, with 0
-indent used as top-level elements. Chunks are delimite as in the "line" mode.
+indent used as top-level elements. Chunks are delimited as in the "line" mode.
 
 Tree documents dumped as raw text by the pii-data package with an indent option
 will have this structure, and hence the original tree can be recreated.

@@ -48,7 +48,7 @@ class BaseDocumentLoader(BaseLoader):
         for loader in self.get_loaders(srcname):
 
             if loader.get("type") == "collection":
-                raise ProcException("invalid loader for doc '{}': collection")
+                raise ProcException("invalid loader for doc '{}': collection", src)
 
             # Import the loader class
             cls = import_object(loader["class"])
@@ -61,7 +61,7 @@ class BaseDocumentLoader(BaseLoader):
             try:
                 return cls(src, metadata=meta, **kwargs)
             except InvalidDocument as e:
-                err.add(str(e))
+                err.append(str(e))
 
         raise ProcException("cannot load document '{}': {}", srcname,
                             ",".join(err))

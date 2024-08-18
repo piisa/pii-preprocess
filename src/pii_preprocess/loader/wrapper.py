@@ -47,6 +47,8 @@ class LoaderWrapper(BaseLoader):
         # Search all possible loaders for this source
         for n, loader in enumerate(self.get_loaders(name), start=1):
 
+            self.log("loader: %s", loader)
+
             # Import the loader class
             cls = import_object(loader["class"])
             kwargs = loader.get("class_kwargs", {})

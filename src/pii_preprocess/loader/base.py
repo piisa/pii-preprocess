@@ -38,6 +38,8 @@ class BaseLoader:
           :param config: a configuration section corresponding to a loader
             config
         """
+        self.log("loading config")
+
         fmt = config.get("format")
         if fmt != FMT_CONFIG_PREFIX + defs.FMT_CONFIG_LOADER:
             raise ConfigException("invalid format for loader config data")
@@ -102,6 +104,8 @@ class BaseLoader:
 
         if not mime:
             raise ProcException("cannot find a mime type for file: {}", name)
+
+        self.log("mime: %s", mime)
 
         # Return the loaders for these mime types
         return filter(None, (self.conf.loader[m] for m in mime))

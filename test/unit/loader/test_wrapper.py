@@ -1,20 +1,17 @@
 
 from pathlib import Path
 
-from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.exception import ProcException
 from pii_data.defs import FMT_CONFIG_PREFIX
-import pii_data.types.doc.document as docmod
 
-from pii_preprocess.defs import FMT_CONFIG_LOADER, PII_PREPROCESS_PLUGIN_ID
+from pii_preprocess.defs import FMT_CONFIG_LOADER
 import pii_preprocess.loader.wrapper as mod
-import pii_preprocess.loader.utils as modutils
 
 from taux.monkey_patch import patch_uuid, patch_entry_points
 
-NUM_LOADERS = 6
+NUM_LOADERS = 7
 
 DATADIR = Path(__file__).parents[2] / "data"
 

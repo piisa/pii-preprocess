@@ -270,6 +270,24 @@ def test320_ctx_manager():
     assert exp == got
 
 
+def test350_dump(fix_uuid, fix_tstamp):
+    """Test object dump"""
+
+    filename = fname("table-example.csv")
+    obj = mod.LocalCsvDocument(filename, id_path_prefix=False)
+
+    try:
+        f = tempfile.NamedTemporaryFile(mode="wt", suffix=".yml", delete=False)
+        obj.dump(f.name)
+        got = load_yaml(f.name)
+    finally:
+        #print(f.name)
+        Path(f.name).unlink()
+
+    exp = load_yaml(fname("table-example.yml"))
+    assert exp == got
+
+
 def test400_read_chunks():
     """Test document chunks"""
     filename = fname("table-example.csv")
@@ -297,7 +315,9 @@ def test401_read_chunks_repeat():
 
 
 def test410_chunks_ctx_manager():
-    """Test reading local document, using context manager"""
+    """
+    Test reading local document, using context manager
+    """
     with mod.LocalCsvDocument(fname("table-example.csv")) as f:
         got = list(f)
 
@@ -305,18 +325,88 @@ def test410_chunks_ctx_manager():
     assert exp == got
 
 
-def test420_read_chunks_context(fix_uuid, fix_tstamp):
-    """Test document chunks, context"""
+def test500_read_chunks_context(fix_uuid, fix_tstamp):
+    """
+    Test document chunk iteration, w/ context
+    """
     name = fname("table-example.csv")
-    obj = mod.LocalCsvDocument(name, id_path_prefix=False,
-                               iter_options={'context': True})
-    got = list(obj)
-    obj.close()
+    with mod.LocalCsvDocument(name, id_path_prefix=False,
+                              iter_options={'context': True}) as obj:
+        got = list(obj)
 
     ctx_doc = MappingProxyType({"type": "table", "origin": "csv",
                                 "id": "00000-11111",
                                 "date": "1970-01-01T00:00:20"})
 
+    # Check the first chunk
+    assert got[0] == DocumentChunk(
+        id=CHUNKS[0]['id'],
+        data=CHUNKS[0]['data'],
+        context={"document": ctx_doc,
+                 "column": {"name": "Date", "number": 1},
+                 "row": "R1",
+                 "before": "Date: "}
+    )
+
+    # Check all chunks
+    exp = [
+        DocumentChunk(
+            id=e['id'],
+            data=e['data'],
+            context={"document": ctx_doc,
+                     "column": e["context"]["column"],
+                     "row": e["context"]["row"],
+                     "before": e["context"]["column"]["name"] + ": "}
+        )
+        for n, e in enumerate(CHUNKS)
+    ]
+    assert len(exp) == len(got)
+    assert exp == got
+
+
+def test510_read_chunks_context_meta(fix_tstamp):
+    """
+    Test document chunk iteration, w/ context & metadata
+    """
+    with mod.LocalCsvDocument(fname("table-example.csv"),
+                              iter_options={'context': True}) as obj:
+        obj.add_metadata(document={"lang": "en"}, dataset={"name": "BigDataset"})
+        obj.set_id("abc")
+        got = list(obj)
+
+    ctx_doc = MappingProxyType({"id": "abc", "lang": "en", "type": "table",
+                                "origin": "csv", "date": "1970-01-01T00:00:20"})
+    ctx_ds = MappingProxyType({"name": "BigDataset"})
+    exp = [
+        DocumentChunk(
+            id=e['id'],
+            data=e['data'],
+            context={"document": ctx_doc,
+                     "dataset": ctx_ds,
+                     "column": e["context"]["column"],
+                     "row": e["context"]["row"],
+                     "before": e["context"]["column"]["name"] + ": "}
+        )
+        for n, e in enumerate(CHUNKS)
+    ]
+
+    assert len(exp) == len(got)
+    assert exp == got
+
+
+@pytest.mark.skip("not available yet")
+def test550_read_chunks_context_neighbours(fix_uuid, fix_tstamp):
+    """
+    Test document chunks, w/ context
+    """
+    name = fname("table-example.csv")
+    with mod.LocalCsvDocument(name, id_path_prefix=False,
+                              iter_options={'context': 'neighbours'}) as obj:
+        got = list(obj)
+
+    ctx_doc = MappingProxyType({"type": "table", "origin": "csv",
+                                "id": "00000-11111",
+                                "date": "1970-01-01T00:00:20"})
     # Check the first chunk
     assert got[0] == DocumentChunk(
         id=CHUNKS[0]['id'],
@@ -336,10 +426,11 @@ def test420_read_chunks_context(fix_uuid, fix_tstamp):
                      "column": e["context"]["column"],
                      "row": e["context"]["row"],
                      "before": CHUNKS[n-1]['data'] if n else None,
-                     "after": CHUNKS[n+1]['data'] if n<len(CHUNKS)-1 else None}
+                     "after": CHUNKS[n+1]['data'] if n < len(CHUNKS)-1 else None}
         )
         for n, e in enumerate(CHUNKS)
     ]
+
     del exp[0].context['before']
     del exp[-1].context['after']
 
@@ -347,10 +438,11 @@ def test420_read_chunks_context(fix_uuid, fix_tstamp):
     assert exp == got
 
 
-def test420_read_chunks_context_meta(fix_tstamp):
+@pytest.mark.skip("not available yet")
+def test560_read_chunks_context_neigh_meta(fix_tstamp):
     """Test object creation, multiple chunks, context, metadata"""
     obj = mod.LocalCsvDocument(fname("table-example.csv"),
-                               iter_options={'context': True})
+                               iter_options={'context': "neighbours"})
     obj.add_metadata(document={"lang": "en"}, dataset={"name": "BigDataset"})
     obj.set_id("abc")
     got = list(obj)
@@ -368,7 +460,7 @@ def test420_read_chunks_context_meta(fix_tstamp):
                      "column": e["context"]["column"],
                      "row": e["context"]["row"],
                      "before": CHUNKS[n-1]['data'] if n else None,
-                     "after": CHUNKS[n+1]['data'] if n<len(CHUNKS)-1 else None}
+                     "after": CHUNKS[n+1]['data'] if n < len(CHUNKS)-1 else None}
         )
         for n, e in enumerate(CHUNKS)
     ]
@@ -376,22 +468,4 @@ def test420_read_chunks_context_meta(fix_tstamp):
     del exp[-1].context['after']
 
     assert len(exp) == len(got)
-    assert exp == got
-
-
-def test500_dump(fix_uuid, fix_tstamp):
-    """Test object dump"""
-
-    filename = fname("table-example.csv")
-    obj = mod.LocalCsvDocument(filename, id_path_prefix=False)
-
-    try:
-        f = tempfile.NamedTemporaryFile(mode="wt", suffix=".yml", delete=False)
-        obj.dump(f.name)
-        got = load_yaml(f.name)
-    finally:
-        #print(f.name)
-        Path(f.name).unlink()
-
-    exp = load_yaml(fname("table-example.yml"))
     assert exp == got

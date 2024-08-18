@@ -9,7 +9,7 @@ from typing import Dict, TextIO
 from pii_data.helper.io import openfile
 from pii_data.types.doc.document import TYPE_META
 
-from ...utils import add_default_meta
+from pii_preprocess.helper import add_default_meta
 
 
 class BaseReader:

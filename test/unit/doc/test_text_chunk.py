@@ -76,20 +76,20 @@ def test120_paragraphs():
     """
     Split by paragraphs
     """
-    opt = {"mode": "para"}
-    obj = mod.TextSrcDocument(DATADIR / "en-morus-rubra.txt",
-                              chunk_options=opt)
-    got = list(obj)
-    assert len(got) == 21
+    for opt in ({"mode": "para"}, {"mode": "para", "separator": "eop"}):
+        obj = mod.TextSrcDocument(DATADIR / "en-morus-rubra.txt",
+                                  chunk_options=opt)
+        got = list(obj)
+        assert len(got) == 21
 
-    assert got[0].data == "MORUS RUBRA\nFrom Wikipedia, the free encyclopedia\nSpecies of tree\n\n"
+        assert got[0].data == "MORUS RUBRA\nFrom Wikipedia, the free encyclopedia\nSpecies of tree\n\n"
 
 
-def test121_paragraphs_eos():
+def test121_paragraphs_eosn():
     """
-    Split by paragraphs, use also eos marks
+    Split by paragraphs, use eosn marks
     """
-    opt = {"mode": "para", "eos": True}
+    opt = {"mode": "para", "separator": "eosn"}
     obj = mod.TextSrcDocument(DATADIR / "en-morus-rubra.txt",
                               chunk_options=opt)
     got = list(obj)
@@ -98,7 +98,20 @@ def test121_paragraphs_eos():
     assert got[0].data == "MORUS RUBRA\nFrom Wikipedia, the free encyclopedia\nSpecies of tree\n\n"
 
 
-def test122_paragraphs_wmin():
+def test122_paragraphs_eos():
+    """
+    Split by paragraphs, use eos marks
+    """
+    opt = {"mode": "para", "separator": "eos"}
+    obj = mod.TextSrcDocument(DATADIR / "en-morus-rubra.txt",
+                              chunk_options=opt)
+    got = list(obj)
+    assert len(got) == 59
+
+    assert got[0].data == "MORUS RUBRA\nFrom Wikipedia, the free encyclopedia\nSpecies of tree\n\n"
+
+
+def test130_paragraphs_wmin():
     """
     Split by paragraphs, min words
     """
@@ -111,7 +124,7 @@ def test122_paragraphs_wmin():
     assert got[0].data == "MORUS RUBRA\nFrom Wikipedia, the free encyclopedia\nSpecies of tree\n\nMORUS RUBRA, commonly known as the RED MULBERRY, is a species of\nmulberry native to eastern and central North America. It is found from\nOntario, Minnesota, and Vermont south to southern Florida, and west as\nfar as southeastern South Dakota, Nebraska, Kansas, and central Texas.\nThere have been reports of isolated populations (very likely\nnaturalized) in New Mexico, Idaho, and British Columbia. ([2])\n\n"
 
 
-def test123_paragraphs_wmax():
+def test131_paragraphs_wmax():
     """
     Split by paragraphs, max words
     """
@@ -124,7 +137,7 @@ def test123_paragraphs_wmax():
     assert got[1].data == "MORUS RUBRA, commonly known as the RED MULBERRY, is a species of\nmulberry native to eastern and central North America. "
 
 
-def test124_paragraphs_wminmax():
+def test132_paragraphs_wminmax():
     """
     Split by paragraphs, min & max words
     """
@@ -137,7 +150,7 @@ def test124_paragraphs_wminmax():
     assert got[7].data == "Contents\n\n-   1 Description\n-   2 Ecology\n-   3 Uses\n-   4 References\n-   5 External links\n\n\nDescription\n\n"
 
 
-def test130_single(fix_uuid):
+def test140_single(fix_uuid):
     """
     Single chunk
     """

@@ -27,7 +27,7 @@ class DocumentCollection:
         """
           :param config: loader config
           :param metadata: metadata to add to all loaded documents
-          :param loader: a loader to use to load documents in the folder
+          :param loader: a loader to use to load documents
             (if not passed, a new loader object will be instantiated)
           :param debug: activate debug output
           :param skip_config_loading: do not perform a full config load;

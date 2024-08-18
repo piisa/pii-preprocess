@@ -12,7 +12,7 @@ from pii_preprocess.defs import FMT_CONFIG_LOADER
 import pii_preprocess.loader.loader as mod
 
 
-NUM_LOADERS = 6
+NUM_LOADERS = 7
 
 DATADIR = Path(__file__).parents[2] / "data"
 

@@ -1,5 +1,5 @@
 """
-Test the reading plain text files in different languages
+Test reading plain text files in different languages
 """
 
 from pathlib import Path
@@ -26,11 +26,11 @@ def test200_paragraphs_zh():
     assert got[1].data == "== 名称 ==\n\n\n"
 
 
-def test201_paragraphs_zh_eos():
+def test201_paragraphs_zh_eosn():
     """
     Split by paragraphs, chinese text, split also by sentence & newlines
     """
-    opt = {"mode": "para", "eos": True}
+    opt = {"mode": "para", "separator": "eosn"}
     obj = mod.TextSrcDocument(DATADIR / "zh-yangtze.txt",
                               chunk_options=opt)
     got = list(obj)
@@ -52,11 +52,11 @@ def test210_paragraphs_ar():
     assert got[1].data == "== جغرافيا ==\n\n"
 
 
-def test211_paragraphs_ar_eos():
+def test211_paragraphs_ar_eosn():
     """
-    Split by paragraphs, arabic text, eos
+    Split by paragraphs, arabic text, eosn
     """
-    opt = {"mode": "para", "eos": True}
+    opt = {"mode": "para", "separator": "eosn"}
     obj = mod.TextSrcDocument(DATADIR / "ar-indian-ocean.txt",
                               chunk_options=opt)
     got = list(obj)
@@ -83,9 +83,9 @@ def test220_paragraphs_hi():
 
 def test221_paragraphs_hi():
     """
-    Split by paragraphs, hindi text, eos
+    Split by paragraphs, hindi text, eosn
     """
-    opt = {"mode": "para", "eos": True}
+    opt = {"mode": "para", "separator": "eosn"}
     obj = mod.TextSrcDocument(DATADIR / "hi-indian-ocean.txt",
                               chunk_options=opt)
     got = list(obj)

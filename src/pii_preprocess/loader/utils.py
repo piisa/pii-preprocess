@@ -2,6 +2,7 @@
 Some utility functions to fetch configurations for pii-preprocess Loaders
 """
 
+from sys import version_info as python_version_info
 from pathlib import Path
 from operator import itemgetter
 from importlib.metadata import entry_points
@@ -30,9 +31,13 @@ def get_plugin_config(config: Dict, debug: bool = False) -> List[Dict]:
     # Configuration for plugins
     plugin_load_cfg = config.get("plugins", {}) if config else {}
 
-    plugin_list = []
+    if python_version_info >= (3, 10):
+        plugins = entry_points().select(group=defs.PII_PREPROCESS_PLUGIN_ID)
+    else:
+        plugins = entry_points().get(defs.PII_PREPROCESS_PLUGIN_ID, [])
 
-    for entry in entry_points().get(defs.PII_PREPROCESS_PLUGIN_ID, []):
+    plugin_list = []
+    for entry in plugins:
 
         # See if we have specific options to load this plugin
         cfg = plugin_load_cfg.get(entry.name, {})

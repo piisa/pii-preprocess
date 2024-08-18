@@ -5,7 +5,6 @@ from unittest.mock import Mock
 import pytest
 
 from pii_data.helper.exception import InvArgException
-from pii_data.types.doc import LocalSrcDocument
 import pii_data.types.doc.document as docmod
 
 import pii_preprocess.collection.src.folder as mod
@@ -86,4 +85,3 @@ def test210_load_glob_rec(fix_uuid):
         assert doc.id == "33333-22222"
 
     assert n == 2
-    

@@ -2,23 +2,27 @@
   "format": "piisa:config:pii-preprocess:loader:v2",
   "types": [
     {
-      "mime": "text/csv",
-      "ext": ".csv"
-    },
-    {
       "mime": "application/x-src-document",
-      "ext":  [".yaml", ".yml"]
-    },
-    {
-      "mime": "application/msword",
-      "ext": ".docx"
+      "ext":  [".yaml", ".yml", ".json"]
     },
     {
       "mime": "text/plain",
       "ext": ".txt"
     },
     {
-      "mime": "application/ndjson",
+      "mime": "text/csv",
+      "ext": ".csv"
+    },
+    {
+      "mime": "application/msword",
+      "ext": ".docx"
+    },
+    {
+      "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ext": ".xlsx"
+    },
+    {
+      "mime": "application/jsonl",
       "ext": [".ndjson", ".jsonl"]
     }
   ],
@@ -45,10 +49,17 @@
       "class": "pii_preprocess.doc.msoffice.MsWordDocument",
       "type": "document"
     },
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+      "class": "pii_preprocess.doc.msoffice.ExcelDocument",
+      "type": "document"
+    },
     "inode/directory": {
       "class": "pii_preprocess.collection.src.FolderDocumentCollection",
       "type": "collection"
     },
-    "application/ndjson": null
+    "application/jsonl":  {
+      "class": "pii_preprocess.collection.src.JsonlDocumentCollection",
+      "type": "collection"
+    }
   }
 }
