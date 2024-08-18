@@ -1,0 +1,63 @@
+format: piisa:src-document:v1
+header:
+  document:
+    id: 00000-11111
+    origin: msexcel
+    type: table
+    title: Example workbook
+    subject: PIISA
+    date: '2024-03-25T18:49:24'
+    sheetname: table-example
+  column:
+    name:
+    - Date
+    - Name
+    - Credit Card
+    - Currency
+    - Amount
+    - Description
+chunks:
+- id: 2
+  data:
+  - id: A2
+    data: 2021-03-01 00:00:00
+  - id: B2
+    data: John Smith
+  - id: C2
+    data: 4273 9666 4581 5642
+  - id: D2
+    data: USD
+  - id: E2
+    data: 12.39
+  - id: F2
+    data: 'Our Iceberg Is Melting: Changing and Succeeding Under Any Conditions'
+- id: 3
+  data:
+  - id: A3
+    data: 2022-09-10 00:00:00
+  - id: B3
+    data: Erik Jonsk
+  - id: C3
+    data: 4273 9666 4581 5642
+  - id: D3
+    data: EUR
+  - id: E3
+    data: 11.99
+  - id: F3
+    data: Bedtime Originals Choo Choo Express Plush Elephant - Humphrey
+- id: 4
+  data:
+  - id: A4
+    data: 2022-09-11 00:00:00
+  - id: B4
+    data: John Smith
+  - id: C4
+    data: 4273 9666 4581 5642
+  - id: D4
+    data: USD
+  - id: E4
+    data: 339.99
+  - id: F4
+    data: Robot Vacuum Mary, Nobuk Robotic Vacuum Cleaner and Mop, 5000Pa Suction,
+      Intelligent AI Mapping, Virtual Walls, Ideal for Pets Hair, Self-Charging, Carpets,
+      Hard Floors, Tile, Wi-Fi, App Control

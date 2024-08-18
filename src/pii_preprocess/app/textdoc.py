@@ -6,7 +6,7 @@ formats
 from argparse import ArgumentParser, Namespace
 
 from pii_data.helper.io import base_extension
-from pii_data.types.localdoc import LocalSrcDocumentFile
+from pii_data.types.doc.localdoc import LocalSrcDocumentFile
 
 from ..doc.text import TextSrcDocument, CHUNK_MODES
 

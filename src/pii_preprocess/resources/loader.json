@@ -1,0 +1,65 @@
+{
+  "format": "piisa:config:pii-preprocess:loader:v2",
+  "types": [
+    {
+      "mime": "application/x-src-document",
+      "ext":  [".yaml", ".yml", ".json"]
+    },
+    {
+      "mime": "text/plain",
+      "ext": ".txt"
+    },
+    {
+      "mime": "text/csv",
+      "ext": ".csv"
+    },
+    {
+      "mime": "application/msword",
+      "ext": ".docx"
+    },
+    {
+      "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "ext": ".xlsx"
+    },
+    {
+      "mime": "application/jsonl",
+      "ext": [".ndjson", ".jsonl"]
+    }
+  ],
+  "loaders": {
+    "application/x-src-document": {
+      "class": "pii_data.types.doc.localdoc.LocalSrcDocumentFile",
+      "type": "document"
+    },
+    "text/plain": {
+      "class": "pii_preprocess.doc.text.TextSrcDocument",
+      "type": "document",
+      "class_kwargs": {
+	"chunk_options": {
+	  "mode": "paragraph",
+	  "max_words": 250
+	}
+      }
+    },
+    "text/csv": {
+      "class": "pii_preprocess.doc.LocalCsvDocument",
+      "type": "document"
+    },
+    "application/msword": {
+      "class": "pii_preprocess.doc.msoffice.MsWordDocument",
+      "type": "document"
+    },
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
+      "class": "pii_preprocess.doc.msoffice.ExcelDocument",
+      "type": "document"
+    },
+    "inode/directory": {
+      "class": "pii_preprocess.collection.src.FolderDocumentCollection",
+      "type": "collection"
+    },
+    "application/jsonl":  {
+      "class": "pii_preprocess.collection.src.JsonlDocumentCollection",
+      "type": "collection"
+    }
+  }
+}

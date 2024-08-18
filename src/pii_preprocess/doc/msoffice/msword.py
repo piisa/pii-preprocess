@@ -33,6 +33,7 @@ def iter_paragraphs(it: Iterable[Paragraph]) -> Iterable[Tuple[str, str]]:
     """
     prev = None
     for p in it:
+        #print("***************", p.part, p.runs, p.style, p.text, "\n", sep="\n")
         cur = p.text + "\n", p.style.name
         # If blank, add to previous paragraph and continue
         if not p.text or p.text.isspace():
@@ -77,7 +78,7 @@ class _TreeReader:
         for text, style in iter_paragraphs(self.para):
 
             curlevel = newlevel
-            heading = style.startswith("Heading")
+            heading = style and style.startswith("Heading")
             if heading:
                 try:
                     newlevel = int(style[7:])

@@ -1,0 +1,19 @@
+{
+  "format": "piisa:config:pii-preprocess:loader:v2",
+  "types": [
+    {
+      "mime": "text/blurb",
+      "ext": ".blurb"
+    }
+  ],
+  "loaders": {
+    "text/blurb": {
+      "class": "pii_preprocess.doc.TextBlurb",
+      "type": "document"
+    },
+    "application/x-blurb-collection": {
+      "class": "pii_preprocess.doc.BlurbCollection",
+      "type": "collection"
+    } 
+  }
+}

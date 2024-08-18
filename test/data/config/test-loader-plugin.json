@@ -1,0 +1,23 @@
+{
+  "format": "piisa:config:pii-preprocess:loader:v2",
+  "types": [
+    {
+      "mime": "text/x-blurb-plugin",
+      "ext": ".blurb"
+    },
+    {
+      "mime": "text/x-blurb-collection-plugin",
+      "pattern": ".*/collection/.+"
+    }
+  ],
+  "loaders": {
+    "text/x-blurb-plugin": {
+      "class": "taux.loader.plugin.BlurbText",
+      "type": "document"
+    },
+    "text/x-blurb-collection-plugin": {
+      "class": "taux.loder.plugin.BlurbCollection",
+      "type": "collection"
+    } 
+  }
+}

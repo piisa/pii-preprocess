@@ -44,7 +44,7 @@ backup:
 	tar cvjf pii-preprocess-$(VERSION).tgz \
 	--exclude=__pycache__ --exclude=pii_preprocess.egg-info \
 	doc src test \
-	CHANGES.txt LICENSE README.md \
+	README.md CHANGES.md LICENSE \
 	Makefile MANIFEST.in requirements.txt setup.py
 
 # --------------------------------------------------------------------------

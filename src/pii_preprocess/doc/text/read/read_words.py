@@ -8,7 +8,7 @@ from typing import Dict, Iterator
 
 from pii_data.types.doc.localdoc import SequenceLocalSrcDocument
 
-from ...utils import chunker
+from pii_preprocess.helper import chunker
 from ..defs import DEFAULT_MAX_WORDS
 from .base import BaseReader
 

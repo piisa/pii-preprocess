@@ -15,7 +15,7 @@ from pii_data.helper.io import openfile
 from pii_data.types.doc.document import TableSrcDocument, TYPE_META
 from pii_data.types.doc.localdoc import TableLocalSrcDocument
 
-from .utils import add_default_meta, as_bool
+from ..helper import add_default_meta, as_bool
 
 
 class CsvDocument(TableSrcDocument):
@@ -77,7 +77,7 @@ class TextIOCsvDocument(CsvDocument):
     A slightly-less-abstract CSV document class.
     Subclasses need to provide the open() method, which should return a TextIO
     object from which the CSV raw text data can be fetched.
-    The method is assumed to be re-entrant, i.e. a document can be reopened
+    That method is assumed to be re-entrant, i.e. a document can be reopened
     and iterated many times.
     """
 
@@ -93,7 +93,7 @@ class TextIOCsvDocument(CsvDocument):
         # Open (or reopen) source as needed
         if self._src is None or self._src.used:
             self._open_data()
-        # Ste status & return iterator
+        # Set status & return iterator
         self._src.used = True
         return self._src.it
 
@@ -116,6 +116,9 @@ class TextIOCsvDocument(CsvDocument):
 
 
     def open(self):
+        """
+        This has to be implemented in a subclass
+        """
         raise UnimplementedException("abstract class TextIOCsvDocument")
 
 
@@ -155,7 +158,6 @@ class LocalCsvDocument(TextIOCsvDocument, TableLocalSrcDocument):
         document id. If the document metadata includes an id, it will be
         used, else a random UUID will be generated.
         """
-
         # Add the file timestamp to the metadata
         if not metadata:
             metadata = {}

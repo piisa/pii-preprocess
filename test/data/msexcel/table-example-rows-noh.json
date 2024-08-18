@@ -1,0 +1,262 @@
+[
+  {
+    "id": 1,
+    "data": [
+      {
+        "id": "A1",
+        "data": "Date",
+        "context": {
+          "column": {
+            "number": 1
+          },
+          "row": 1
+        }
+      },
+      {
+        "id": "B1",
+        "data": "Name",
+        "context": {
+          "column": {
+            "number": 2
+          },
+          "row": 1
+        }
+      },
+      {
+        "id": "C1",
+        "data": "Credit Card",
+        "context": {
+          "column": {
+            "number": 3
+          },
+          "row": 1
+        }
+      },
+      {
+        "id": "D1",
+        "data": "Currency",
+        "context": {
+          "column": {
+            "number": 4
+          },
+          "row": 1
+        }
+      },
+      {
+        "id": "E1",
+        "data": "Amount",
+        "context": {
+          "column": {
+            "number": 5
+          },
+          "row": 1
+        }
+      },
+      {
+        "id": "F1",
+        "data": "Description",
+        "context": {
+          "column": {
+            "number": 6
+          },
+          "row": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "data": [
+      {
+        "id": "A2",
+        "data": "2021-03-01T00:00:00",
+        "context": {
+          "column": {
+            "number": 1
+          },
+          "row": 2
+        }
+      },
+      {
+        "id": "B2",
+        "data": "John Smith",
+        "context": {
+          "column": {
+            "number": 2
+          },
+          "row": 2
+        }
+      },
+      {
+        "id": "C2",
+        "data": "4273 9666 4581 5642",
+        "context": {
+          "column": {
+            "number": 3
+          },
+          "row": 2
+        }
+      },
+      {
+        "id": "D2",
+        "data": "USD",
+        "context": {
+          "column": {
+            "number": 4
+          },
+          "row": 2
+        }
+      },
+      {
+        "id": "E2",
+        "data": 12.39,
+        "context": {
+          "column": {
+            "number": 5
+          },
+          "row": 2
+        }
+      },
+      {
+        "id": "F2",
+        "data": "Our Iceberg Is Melting: Changing and Succeeding Under Any Conditions",
+        "context": {
+          "column": {
+            "number": 6
+          },
+          "row": 2
+        }
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "data": [
+      {
+        "id": "A3",
+        "data": "2022-09-10T00:00:00",
+        "context": {
+          "column": {
+            "number": 1
+          },
+          "row": 3
+        }
+      },
+      {
+        "id": "B3",
+        "data": "Erik Jonsk",
+        "context": {
+          "column": {
+            "number": 2
+          },
+          "row": 3
+        }
+      },
+      {
+        "id": "C3",
+        "data": "4273 9666 4581 5642",
+        "context": {
+          "column": {
+            "number": 3
+          },
+          "row": 3
+        }
+      },
+      {
+        "id": "D3",
+        "data": "EUR",
+        "context": {
+          "column": {
+            "number": 4
+          },
+          "row": 3
+        }
+      },
+      {
+        "id": "E3",
+        "data": 11.99,
+        "context": {
+          "column": {
+            "number": 5
+          },
+          "row": 3
+        }
+      },
+      {
+        "id": "F3",
+        "data": "Bedtime Originals Choo Choo Express Plush Elephant - Humphrey",
+        "context": {
+          "column": {
+            "number": 6
+          },
+          "row": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "data": [
+      {
+        "id": "A4",
+        "data": "2022-09-11T00:00:00",
+        "context": {
+          "column": {
+            "number": 1
+          },
+          "row": 4
+        }
+      },
+      {
+        "id": "B4",
+        "data": "John Smith",
+        "context": {
+          "column": {
+            "number": 2
+          },
+          "row": 4
+        }
+      },
+      {
+        "id": "C4",
+        "data": "4273 9666 4581 5642",
+        "context": {
+          "column": {
+            "number": 3
+          },
+          "row": 4
+        }
+      },
+      {
+        "id": "D4",
+        "data": "USD",
+        "context": {
+          "column": {
+            "number": 4
+          },
+          "row": 4
+        }
+      },
+      {
+        "id": "E4",
+        "data": 339.99,
+        "context": {
+          "column": {
+            "number": 5
+          },
+          "row": 4
+        }
+      },
+      {
+        "id": "F4",
+        "data": "Robot Vacuum Mary, Nobuk Robotic Vacuum Cleaner and Mop, 5000Pa Suction, Intelligent AI Mapping, Virtual Walls, Ideal for Pets Hair, Self-Charging, Carpets, Hard Floors, Tile, Wi-Fi, App Control",
+        "context": {
+          "column": {
+            "number": 6
+          },
+          "row": 4
+        }
+      }
+    ]
+  }
+]
